@@ -1,9 +1,13 @@
 
 var PokerCard = require("./PokerCard")
-
 class Player{
-  constructor (){
+  constructor (name, type){
+    this._name = name
+    this._type = type
+    this._isLandlord = this._type === 'landlord' ? true :false
     this._pokerCardList = []
+    this._partners = []
+    this._enemies = []
   }
   /**
    * 出牌
