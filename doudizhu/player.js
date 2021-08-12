@@ -12,6 +12,7 @@ class Player {
     this._isSob = false //是否抢过地主
     this._pokerCardList = []
     this._beforePlayer = null
+    this._nextPlayer = null
     // this._partners = []
     // this._enemies = []
   }
@@ -41,18 +42,23 @@ class Player {
    * 玩家指令
    */
   commands(commandType) {
+    let flag = 0
     switch (commandType) {
       case "askLandlord":
-        playerDirector.reciveMessage("askLandlord", this)
+        flag = '1'
+        playerDirector.reciveMessage("askLandlord", this, flag)
         break;
       case "notAskLanlord":
-        playerDirector.reciveMessage("notAskLanlord", this)
+        flag = '0'
+        playerDirector.reciveMessage("notAskLanlord", this, flag)
         break;
       case "sobLandlord":
-        playerDirector.reciveMessage("sobLandlord", this)
+        flag = '1'
+        playerDirector.reciveMessage("sobLandlord", this, flag)
         break;
       case "notSobLandlord":
-        playerDirector.reciveMessage("notSobLandlord", this)
+        flag = '0'
+        playerDirector.reciveMessage("notSobLandlord", this, flag)
         break;
     }
   }

@@ -1,12 +1,13 @@
 var pokerCardFactory = require("./pokerCardFactory")
 var playerFactory = require('./playerFactory')
-
+var selectLandlord = require('./landlordRules')
 var random = require('./random')
 
 
 var playerDirector = (function () {
   var _players = {}
   var PLAYER_NUMS = 3
+  var _flag = ''
 
   var operations = {}
   var _cards = pokerCardFactory()
@@ -35,22 +36,23 @@ var playerDirector = (function () {
     operations.register(player)
   }
 
-  operations.askLandlord = function (player) {
-    if (!player._isBanker) {
-      return false
-    }
+  operations.askLandlord = function (player, flag) {
+    _flag += flag
     player._isAsk = true
   }
 
-  operations.notAskLanlord = function (player) {
+  operations.notAskLanlord = function (player, flag) {
+    _flag += flag
     player._isAsk = false
   }
 
-  operations.sobLandlord = function (player) {
+  operations.sobLandlord = function (player, flag) {
+    _flag += flag
     player._isSob = true
   }
 
-  operations.notSobLandlord = function (player) {
+  operations.notSobLandlord = function (player, flag) {
+    _flag += flag
     player._isSob = false
   }
 
@@ -60,16 +62,16 @@ var playerDirector = (function () {
   }
 
   //寻找庄家的位置
-  var _findBankerIndex = function (players) {
-    players.forEach((player, index) => {
+  var _findBankerIndex = function (playerList) {
+    playerList.forEach((player, index) => {
       if (player._isBanker) {
         return index
       }
     })
   },
 
-  //获取玩家循环列表
-  var _getCycleList = function (bankerIndex, pLen) {
+  //获取玩家index循环列表
+  var _getCycleIndexList = function (bankerIndex, pLen) {
     let cycleList = []
     cycleList.push(bankerIndex)
     let c = bankerIndex + 1
@@ -89,7 +91,7 @@ var playerDirector = (function () {
     }
     let pLen = _players["civilian"].length
     let bankerIndex = _findBankerIndex(_players["civilian"])
-    let cycleList = _getCycleList(bankerIndex, pLen)
+    let cycleList = _getCycleIndexList(bankerIndex, pLen)
     //从庄家开始发牌
     while (cards.length > pLen) {
       cycleList.forEach(i => {
@@ -124,16 +126,24 @@ var playerDirector = (function () {
     }
     let civilians = _players["civilian"]
     let len = civilians.length
-    for (let i = 1; i < len; i++) {
+    for (let i = 1; i < len - 1; i++) {
       civilians[i]._beforePlayer = civilians[i - 1]
+      civilians[i]._nextPlayer = civilians[i + 1]
     }
     civilians[0]._beforePlayer = civilians[len - 1]
+    civilians[0]._nextPlayer = civilians[1]
+    civilians[len - 1]._beforePlayer = civilians[len - 2]
+    civilians[len - 1]._nextPlayer = civilians[0]
   },
 
-  var _initBanker = function () {
-    let len = _players["civilian"].length
-    let bankerIndex = random(0, len - 1)
-    _players["civilian"][bankerIndex]._isBanker = true
+  var _initBanker = function (index) {
+    if (index) {
+      _players["civilian"][index]._isBanker = true
+    } else {
+      let len = _players["civilian"].length
+      let bankerIndex = random(0, len - 1)
+      _players["civilian"][bankerIndex]._isBanker = true
+    }
   },
 
   var _initCards = function () {
@@ -144,11 +154,12 @@ var playerDirector = (function () {
   var _initLandlord = function () {
     let civilians = _players["civilian"]
     let len = civilians.length
-    for (let i = 0; i < len; i++) {
-      let civilian = civilians[i]
-      if (civilian._isBanker) {
-
-      }
+    let bankerIndex = _findBankerIndex(civilians)
+    let res = selectLandlord(civilians[(bankerIndex + 1) % len], _flag)
+    //重新发牌,庄家为下家
+    if (!res) {
+      _initBanker((bankerIndex + 1) % len)
+      _initCards()
     }
   }
 
