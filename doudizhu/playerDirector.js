@@ -4,9 +4,10 @@ var selectLandlord = require('./landlordRules')
 var random = require('./random')
 
 
-var playerDirector = (function () {
+var playerDirector = function () {
   var _players = {}
   var PLAYER_NUMS = 3
+  var _playerNums = 0
   var _flag = ''
 
   var operations = {}
@@ -15,6 +16,7 @@ var playerDirector = (function () {
   //添加玩家
   operations.register = function (player) {
     let type = player._type
+    _playerNums++
     _players[type] = player[type] || []
     _players[type].push(player)
   }
@@ -164,9 +166,15 @@ var playerDirector = (function () {
   }
 
   //规定初始化流程
-  var init = function () {
+  var _init = function () {
     _initPlayers()
     _initBanker()
     _initCards()
   }
-})
+
+
+  return {
+    playerNums: _playerNums,
+    init: _init
+  }
+}

@@ -2,7 +2,7 @@
 var PokerCard = require("./PokerCard")
 var playerDirector = require("./playerDirector")
 class Player {
-  constructor(name, type, id) {
+  constructor(name, type, id, level) {
     this._id = id
     this._name = name
     this._type = type
@@ -13,6 +13,7 @@ class Player {
     this._pokerCardList = []
     this._beforePlayer = null
     this._nextPlayer = null
+    this._level = level
     // this._partners = []
     // this._enemies = []
   }
@@ -63,3 +64,5 @@ class Player {
     }
   }
 }
+
+export default Player

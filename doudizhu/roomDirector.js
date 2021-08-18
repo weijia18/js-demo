@@ -1,3 +1,6 @@
+var playerDirector = require("./playerDirector")
+var Room = require("./Room")
+
 var roomDirector = (function () {
   var _roomNO = {
     bronze: _initRoomNO(),
@@ -16,26 +19,47 @@ var roomDirector = (function () {
     return list
   },
 
-  var _createRoom = function (data) {
-    let { level } = data
+  var _initRoom = function (player) {
+    let { level } = player
     let roomKeys = _rooms.keys()
-    let key = level + _roomNO[level][0]
+    let key = level + '_' + _roomNO[level][0]
     if (roomKeys.include(key)) {
-      if (_rooms[key].playerNums === 3) {
-        let newKey = level + _roomNO[level].pop()
-        _rooms[newKey] = {
-          name: newKey,
-          playerNums: 1
-        }
+      if (_rooms[key].playerDirector.playerNums === 3) {
+        let newKey = level + '_' + _roomNO[level].pop()
+        let playerDirectorCopy = playerDirector()
+        let room = new Room(newKey)
+        room.addPlayerDirector(playerDirectorCopy)
+        _rooms[newKey] = room
+        return room
       } else {
-        _rooms[key].playerNums++
+        _rooms[key].playerDirector.playerNums++
+        if (_rooms[key].playerDirector.playerNums === 3) {
+          _rooms[key].playerDirector.init()
+        }
+        return _rooms[key]
       }
     } else {
-      let newKey = level + _roomNO[level].pop()
-      _rooms[newKey] = {
-        name: newKey,
-        playerNums: 1
-      }
+      let newKey = level + '_' + _roomNO[level].pop()
+      let playerDirectorCopy = playerDirector()
+      let room = new Room(newKey)
+      room.addPlayerDirector(playerDirectorCopy)
+      _rooms[newKey] = room
+      return room
     }
   }
+
+  var _removeRoom = function (key) {
+    let level = key.split('_')[0]
+    let number = key.split('_')[0]
+    delete _rooms[key]
+    //房间回收
+    _roomNO[level].push(number)
+  }
+
+  return {
+    initRoom: _initRoom,
+    removeRoom: _removeRoom
+  }
 }())
+
+export default roomDirector
