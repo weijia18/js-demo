@@ -41,4 +41,4 @@ var selectLandlord = function (midPlayer, flag) {
   return true
 }
 
-export default selectLandlord
+module.exports = selectLandlord

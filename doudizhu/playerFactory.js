@@ -9,8 +9,8 @@ var playerFactory = function (name, type) {
     let levelIndex = random(0, 3)
     let level = levels[levelIndex]
     var newPlayer = new Player(name, type, id++, level)
-    playerDirector.reciveMessage("register", newPlayer)
+    playerDirector().reciveMessage("register", newPlayer)
     return newPlayer
 }
 
-export default playerFactory
+module.exports = playerFactory

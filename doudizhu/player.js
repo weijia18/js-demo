@@ -43,7 +43,7 @@ class Player {
    * 玩家指令
    */
   commands(commandType) {
-    let flag = 0
+    let flag
     switch (commandType) {
       case "askLandlord":
         flag = '1'
@@ -65,4 +65,5 @@ class Player {
   }
 }
 
-export default Player
+
+module.exports = Player

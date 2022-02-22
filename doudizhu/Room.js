@@ -4,6 +4,7 @@ class Room {
   constructor(name) {
     this.name = name
     this.playerDirector = null
+    this.isFull = false//是否满员
   }
 
   addPlayerDirector(playerDirector) {
@@ -11,4 +12,4 @@ class Room {
   }
 }
 
-export default Room
+module.exports = Room

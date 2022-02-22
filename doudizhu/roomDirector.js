@@ -2,6 +2,14 @@ var playerDirector = require("./playerDirector")
 var Room = require("./Room")
 
 var roomDirector = (function () {
+  var _initRoomNO = function () {
+    let list = []
+    for (let i = 0; i < 10; i++) {
+      list.push(i)
+    }
+    return list
+  }
+
   var _roomNO = {
     bronze: _initRoomNO(),
     sliver: _initRoomNO(),
@@ -10,14 +18,6 @@ var roomDirector = (function () {
   }
 
   var _rooms = {}
-
-  var _initRoomNO = function () {
-    let list = []
-    for (let i = 0; i < 10; i++) {
-      list.push(i)
-    }
-    return list
-  },
 
   var _initRoom = function (player) {
     let { level } = player
@@ -35,6 +35,7 @@ var roomDirector = (function () {
         _rooms[key].playerDirector.playerNums++
         if (_rooms[key].playerDirector.playerNums === 3) {
           _rooms[key].playerDirector.init()
+          _rooms[key].isFull = true
         }
         return _rooms[key]
       }
@@ -48,6 +49,10 @@ var roomDirector = (function () {
     }
   }
 
+  var _getRoom = function (key) {
+    return _rooms[key]
+  }
+
   var _removeRoom = function (key) {
     let level = key.split('_')[0]
     let number = key.split('_')[0]
@@ -58,8 +63,9 @@ var roomDirector = (function () {
 
   return {
     initRoom: _initRoom,
+    getRoom: _getRoom,
     removeRoom: _removeRoom
   }
 }())
 
-export default roomDirector
+module.exports = roomDirector

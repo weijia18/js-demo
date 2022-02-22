@@ -70,7 +70,7 @@ var playerDirector = function () {
         return index
       }
     })
-  },
+  }
 
   //获取玩家index循环列表
   var _getCycleIndexList = function (bankerIndex, pLen) {
@@ -136,7 +136,7 @@ var playerDirector = function () {
     civilians[0]._nextPlayer = civilians[1]
     civilians[len - 1]._beforePlayer = civilians[len - 2]
     civilians[len - 1]._nextPlayer = civilians[0]
-  },
+  }
 
   var _initBanker = function (index) {
     if (index) {
@@ -146,7 +146,7 @@ var playerDirector = function () {
       let bankerIndex = random(0, len - 1)
       _players["civilian"][bankerIndex]._isBanker = true
     }
-  },
+  }
 
   var _initCards = function () {
     _shuffle()
@@ -172,9 +172,19 @@ var playerDirector = function () {
     _initCards()
   }
 
+  var getPlayers = function () {
+    return _players
+  }
+
 
   return {
     playerNums: _playerNums,
-    init: _init
+    flag: _flag,
+    init: _init,
+    initLandlord: _initLandlord,
+    getPlayers,
+    reciveMessage
   }
 }
+
+module.exports = playerDirector

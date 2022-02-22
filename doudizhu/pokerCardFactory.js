@@ -6,12 +6,12 @@ const HRAET = '♥️'
 const CLUB = '♣️'
 const DIAMOND = '♦️'
 
-const nums = ['A', 1,2,3,4,5,6,7,8,9,'J','Q','K']
+const nums = ['A', 1, 2, 3, 4, 5, 6, 7, 8, 9, 'J', 'Q', 'K']
 
-var pokerCardFactory = function(){
-  var  uid = 1
+var pokerCardFactory = function () {
+  var uid = 1
   var pokerCards = []
-  for (let i = 0; i < 13 ; i++){
+  for (let i = 0; i < 13; i++) {
     pokerCards.push(new PokerCard(nums[i], uid++, SPADE))
     pokerCards.push(new PokerCard(nums[i], uid++, HRAET))
     pokerCards.push(new PokerCard(nums[i], uid++, CLUB))
@@ -20,4 +20,4 @@ var pokerCardFactory = function(){
   return pokerCards
 }
 
-export default pokerCardFactory
+module.exports = pokerCardFactory
